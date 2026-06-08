@@ -14,84 +14,120 @@ class TransaksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $transaksi = Transaksi::with('pesanan')->latest()->get();
-        return view('transaksi.index', compact('transaksi'));
+        
+        // JIKA DIMINTA LEWAT POSTMAN (API)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Daftar semua transaksi berhasil diambil',
+                'data' => $transaksi
+            ], 200);
+        }
+
+            return view('transaksi.index', compact('transaksi'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-   public function create($id)
-{
-    $pesanan = Pesanan::findOrFail($id);
+    public function create($id)
+    {
+        $pesanan = Pesanan::findOrFail($id);
 
-    return view(
-        'transaksi.create',
-        compact('pesanan')
-    );
-}
+        return view(
+            'transaksi.create',
+            compact('pesanan')
+        );
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-  public function store(TransaksiStoreRequest $request)
-{
-    $validated = $request->validated();
-    
-    $pesanan = Pesanan::findOrFail(
-        $validated['pesanan_id']
-    );
-
-    $kembalian =
-        $validated['bayar'] -
-        $pesanan->total_harga;
-
-   $transaksi = Transaksi::create([
-
-        'pesanan_id' => $pesanan->id,
-
-        'bayar' => $validated['bayar'],
-
-        'kembalian' => $kembalian,
-
-        'tanggal_bayar' => now()
-
-    ]);
-    
-
-    $pesanan->update([
-        'status' => 'Diambil'
-    ]);
-
-    return redirect()
-        ->route(
-            'transaksi.struk',
-            $transaksi->id
+    public function store(TransaksiStoreRequest $request)
+    {
+        $validated = $request->validated();
+        
+        $pesanan = Pesanan::findOrFail(
+            $validated['pesanan_id']
         );
-}
-public function struk($id)
-{
-    $transaksi = Transaksi::with('pesanan')
-                    ->findOrFail($id);
 
-    $pdf = Pdf::loadView(
-        'transaksi.struk',
-        compact('transaksi')
-    );
+       
+        $kembalian = $validated['bayar'] - $pesanan->total_harga;
 
-    return $pdf->stream(
-        'struk-laundry.pdf'
-    );
-}
+        
+        if ($kembalian < 0) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Uang pembayaran tidak cukup'
+                ], 422);
+            }
+            return redirect()->back()->withErrors(['bayar' => 'Uang pembayaran tidak cukup'])->withInput();
+        }
+
+        $transaksi = Transaksi::create([
+            'pesanan_id' => $pesanan->id,
+            'bayar' => $validated['bayar'],
+            'kembalian' => $kembalian,
+            'tanggal_bayar' => now()
+        ]);
+        
+        $pesanan->update([
+            'status' => 'Diambil'
+        ]);
+
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaksi berhasil dibuat',
+                'data' => $transaksi->load('pesanan') 
+            ], 201);
+        }
+
+       
+        return redirect()
+            ->route(
+                'transaksi.struk',
+                $transaksi->id
+            );
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Transaksi $transaksi)
+    public function show(Request $request, $id)
     {
-        //
+        
+        $transaksi = Transaksi::with('pesanan')->findOrFail($id);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Detail transaksi berhasil ditemukan',
+                'data' => $transaksi
+            ], 200);
+        }
+
+        return view('transaksi.show', compact('transaksi'));
+    }
+
+    public function struk($id)
+    {
+        $transaksi = Transaksi::with('pesanan')
+                        ->findOrFail($id);
+
+        $pdf = Pdf::loadView(
+            'transaksi.struk',
+            compact('transaksi')
+        );
+
+        return $pdf->stream(
+            'struk-laundry.pdf'
+        );
     }
 
     /**
@@ -113,17 +149,35 @@ public function struk($id)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaksi $transaksi)
+    public function destroy(Request $request, Transaksi $transaksi)
     {
-        abort_if(!Auth::check() || Auth::user()->role !== 'admin', 403, 'Hanya Admin yang dapat menghapus riwayat transaksi.');
+        
+        $user = $request->user() ?? Auth::user();
 
-        // Update status pesanan kembali ke Selesai
+        if (!$user || $user->role !== 'admin') {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Hanya Admin yang dapat menghapus riwayat transaksi.'
+                ], 403);
+            }
+            abort(403, 'Hanya Admin yang dapat menghapus riwayat transaksi.');
+        }
+
+       
         $transaksi->pesanan->update([
             'status' => 'Selesai'
         ]);
 
-        // Hapus transaksi
+        
         $transaksi->delete();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Riwayat transaksi berhasil dihapus'
+            ], 200);
+        }
 
         return redirect()
             ->route('transaksi.index')
