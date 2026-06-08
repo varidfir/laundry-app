@@ -1,4 +1,4 @@
-# 🧺 Sistem Laundry REST API
+# Sistem Laundry REST API
 
 Sistem Laundry berbasis **REST API** yang dibangun menggunakan **Laravel 13** dan **Laravel Sanctum**.
 
@@ -6,23 +6,23 @@ Aplikasi ini menerapkan sistem **Authentication**, **Role-Based Access Control (
 
 ---
 
-# 📂 Dokumen Pengumpulan & Pengujian
+# Dokumen Pengumpulan & Pengujian
 
 * **Laporan Pengujian Aplikasi**
 * **Postman Collection:** `Laundry-App API (Fixed).postman_collection.json`
 
 ---
 
-# 🛠️ Fitur Utama & Hak Akses (RBAC)
+# Fitur Utama & Hak Akses (RBAC)
 
-## 👑 Admin
+## Admin
 
 * Memiliki semua hak akses yang dimiliki oleh **Kasir**.
 * **Menambahkan Akun Baru** — Dapat mendaftarkan akun kasir baru.
 * **Menghapus Data Pesanan** — Memiliki otorisasi penuh untuk menghapus data dari database.
 * **Menghapus Data Transaksi** — Dapat menghapus riwayat transaksi pembayaran lama.
 
-## 💼 Kasir
+## Kasir
 
 ### Authentication
 
@@ -125,9 +125,9 @@ http://127.0.0.1:8000
 - **Password:** `kasir123`
 ---
 
-# 🛣️ Dokumentasi Endpoint API
+# Dokumentasi Endpoint API
 
-> 💡 **Catatan Pengujian**
+> **Catatan Pengujian**
 >
 > Pastikan menambahkan header berikut pada Postman:
 >
@@ -139,7 +139,7 @@ http://127.0.0.1:8000
 
 ---
 
-# 🔑 1. Authentication Route
+# 1. Authentication Route
 
 | Method | Endpoint        | Akses      | Keterangan                                      |
 | ------ | --------------- | ---------- | ----------------------------------------------- |
@@ -150,7 +150,7 @@ http://127.0.0.1:8000
 
 ---
 
-# 👕 2. Manajemen Pesanan (Sanctum Protected)
+# 2. Manajemen Pesanan (Sanctum Protected)
 
 | Method      | Endpoint                   | Akses         | Keterangan                                 |
 | ----------- | -------------------------- | ------------- | ------------------------------------------ |
@@ -163,7 +163,7 @@ http://127.0.0.1:8000
 
 ---
 
-# 💵 3. Manajemen Transaksi (Sanctum Protected)
+# 3. Manajemen Transaksi (Sanctum Protected)
 
 | Method | Endpoint                              | Akses         | Keterangan                                                               |
 | ------ | ------------------------------------- | ------------- | ------------------------------------------------------------------------ |
@@ -175,7 +175,7 @@ http://127.0.0.1:8000
 
 ---
 
-# 📂 Struktur Kode Penting
+# Struktur Kode Penting
 
 ```text
 app/
