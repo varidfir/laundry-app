@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PesananController;
 use App\Http\Controllers\Api\TransaksiController;
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -37,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rute yang HANYA BISA diakses oleh ADMIN
     // ==========================================
     Route::middleware('admin')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
         Route::delete('/pesanan/{id}', [PesananController::class, 'destroy']);
         Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy']);
     });

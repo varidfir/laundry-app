@@ -18,6 +18,7 @@ Aplikasi ini menerapkan sistem **Authentication**, **Role-Based Access Control (
 ## 👑 Admin
 
 * Memiliki semua hak akses yang dimiliki oleh **Kasir**.
+* **Menambahkan Akun Baru** — Dapat mendaftarkan akun kasir baru.
 * **Menghapus Data Pesanan** — Memiliki otorisasi penuh untuk menghapus data dari database.
 * **Menghapus Data Transaksi** — Dapat menghapus riwayat transaksi pembayaran lama.
 
@@ -25,7 +26,6 @@ Aplikasi ini menerapkan sistem **Authentication**, **Role-Based Access Control (
 
 ### Authentication
 
-* Registrasi akun baru
 * Login
 * Logout
 * Melihat profil user yang sedang aktif
@@ -105,7 +105,6 @@ DB_PASSWORD=
 ```bash
 php artisan migrate --seed
 ```
-
 ## 7. Jalankan Server Lokal
 
 ```bash
@@ -117,7 +116,13 @@ Server akan berjalan pada:
 ```text
 http://127.0.0.1:8000
 ```
+**Akun Default (Admin):**
+- **Email:** `admin@gmail.com`
+- **Password:** `admin123`
 
+**Akun Default (Kasir):**
+- **Email:** `kasir1@gmail.com`
+- **Password:** `kasir123`
 ---
 
 # 🛣️ Dokumentasi Endpoint API
@@ -136,12 +141,12 @@ http://127.0.0.1:8000
 
 # 🔑 1. Authentication Route
 
-| Method | Endpoint        | Akses  | Keterangan                                      |
-| ------ | --------------- | ------ | ----------------------------------------------- |
-| POST   | `/api/register` | Publik | Mendaftarkan akun kasir/admin baru              |
-| POST   | `/api/login`    | Publik | Autentikasi akun untuk mendapatkan Bearer Token |
-| POST   | `/api/logout`   | Token  | Menghapus token aktif dan keluar dari sistem    |
-| GET    | `/api/user`     | Token  | Mengambil profil user yang sedang login         |
+| Method | Endpoint        | Akses      | Keterangan                                      |
+| ------ | --------------- | ---------- | ----------------------------------------------- |
+| POST   | `/api/register` | Admin Only | Mendaftarkan akun kasir baru (Hanya Admin)      |
+| POST   | `/api/login`    | Publik     | Autentikasi akun untuk mendapatkan Bearer Token |
+| POST   | `/api/logout`   | Token      | Menghapus token aktif dan keluar dari sistem    |
+| GET    | `/api/user`     | Token      | Mengambil profil user yang sedang login         |
 
 ---
 
