@@ -9,7 +9,7 @@ Aplikasi ini menerapkan sistem **Authentication**, **Role-Based Access Control (
 # Dokumen Pengumpulan & Pengujian
 
 * **Laporan Pengujian Aplikasi**
-* **Postman Collection:** `Laundry-App API (Fixed).postman_collection.json`
+* **Postman Collection:** 
 
 ---
 
