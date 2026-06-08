@@ -9,7 +9,8 @@ Aplikasi ini menerapkan sistem **Authentication**, **Role-Based Access Control (
 # Dokumen Pengumpulan & Pengujian
 
 * **Laporan Pengujian Aplikasi**
-* **Postman Collection:** [laundry_collection.json](./laundry_collection.json) *(Sudah dilengkapi otomatisasi {{token}} global)*
+* **Postman Collection:** `Laundry-App API (Fixed).postman_collection.json`
+
 ---
 
 # Fitur Utama & Hak Akses (RBAC)
