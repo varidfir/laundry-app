@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "build": "vite build --config build-config/vite.config.js",
+        "dev": "vite --config build-config/vite.config.js"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
