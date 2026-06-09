@@ -205,5 +205,3 @@ database/
     # Data awal pengujian (User Admin & Kasir)
 ```
 
-### 5. Kendala & Solusi Selama Pengembangan
-*(Tambahkan kendala & solusi spesifik terkait project Laundry ini)*
